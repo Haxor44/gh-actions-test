@@ -115,10 +115,10 @@ resource "kubernetes_deployment" "flaskapp_deployment" {
           }
 
         #   TODO: Create Redis Deployment & Service & uncomment this section
-        #   env {
-        #     name  = "REDIS_HOST"
-        #     value = kubernetes_service.flaskapp_redis_service.metadata.0.name
-        #   }
+          env {
+            name  = "REDIS_HOST"
+            value = kubernetes_service.flaskapp_redis_service.metadata.0.name
+          }
         }
       }
     }
