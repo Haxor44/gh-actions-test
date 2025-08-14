@@ -125,6 +125,57 @@ resource "kubernetes_deployment" "flaskapp_deployment" {
   }
 }
 
+resource "kubernetes_deployment" "flaskapp_redis_deployment" {
+  metadata {
+    name      = "flaskapp-redis-deployment"
+    namespace = kubernetes_namespace.flaskapp_ns.metadata.0.name
+  }
+
+  spec {
+    replicas = 1
+    selector {
+      match_labels = {
+        application = "flaskapp"
+        type        = "redis"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          application = "flaskapp"
+          type        = "redis"
+        }
+      }
+
+      spec {
+        container {
+          image = "redis:latest"
+          name  = "flaskapp-redis-container"
+
+          port {
+            container_port = 6379
+          }
+
+          volume_mount {
+            name       = "redis-data"
+            mount_path = "/data"
+          }
+        }
+
+        volume {
+          name = "redis-data"
+
+          persistent_volume_claim {
+            claim_name = kubernetes_persistent_volume_claim.flaskapp_redis_pvc.metadata.0.name
+          }
+        }
+      }
+    }
+  }
+  
+}
+
 resource "kubernetes_service" "flaskapp_service" {
   metadata {
     name      = "flaskapp-service"
@@ -143,6 +194,27 @@ resource "kubernetes_service" "flaskapp_service" {
     }
 
     type = "LoadBalancer"
+  }
+}
+
+resource "kubernetes_service" "flaskapp_redis_service" {
+  metadata {
+    name      = "flaskapp-redis-service"
+    namespace = kubernetes_namespace.flaskapp_ns.metadata.0.name
+  }
+
+  spec {
+    selector = {
+      application = "flaskapp"
+      type        = "redis"
+    }
+
+    port {
+      target_port = 6379
+      port        = 6379
+    }
+
+    type = "ClusterIP"
   }
 }
 
