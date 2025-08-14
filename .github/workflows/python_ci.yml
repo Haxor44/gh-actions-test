@@ -127,7 +127,7 @@ jobs:
           if: github.event_name == 'push'
           run: terraform -chdir=python apply -var-file=terraform.tfvars -auto-approve -input=false -refresh=false
 
-=======
+
 name: Python CI
 
 on:
@@ -151,13 +151,12 @@ jobs:
               uses: actions/setup-python@v5
               with:
                 python-version: "3.13"
-<<<<<<< HEAD
->>>>>>> 6313e37 (python ci pipeline)
-=======
+
 
             - name: Run linters
               uses: wearerequired/lint-action@v2
               with:
                 black: true
                 flake8: true
->>>>>>> b92630d (Adding linting for code quality checks)
+
+
