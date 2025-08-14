@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 name: Python CI
 
 on:
@@ -126,6 +126,7 @@ jobs:
           # Only apply on push
           if: github.event_name == 'push'
           run: terraform -chdir=python apply -var-file=terraform.tfvars -auto-approve -input=false -refresh=false
+
 =======
 name: Python CI
 
